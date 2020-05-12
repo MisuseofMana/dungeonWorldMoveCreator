@@ -1,29 +1,4 @@
-# movemaker
+# Dungeon World Move Creator
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+A simple vue.js app using v-model to streamline custom move creation.
+I have plans to integrate a login and move index for users eventually.
