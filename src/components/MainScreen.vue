@@ -5,11 +5,11 @@
       <transition name="fade" mode="out-in">
       <div key="1" v-if="progress === 1">
         <h3>WRITE YOUR MOVE TRIGGER AND CHOOSE YOUR MODIFIERS</h3>
-        <input value="trigger" v-model="trigger">
+        <textarea style="resize: none;" value="trigger" v-model="trigger"></textarea>
 
         <span class="radios">
         <label for="+">+</label>
-        <input type="radio" class="radioButton" value="+" v-model="plusminus">
+        <input checked type="radio" class="radioButton" value="+" v-model="plusminus">
         </span>
 
         <span class="radios">
@@ -17,7 +17,8 @@
         <input type="radio" class="radioButton" value="-" v-model="plusminus">
         </span>
 
-        <select v-model="stat">
+        <div class="flexCol">
+        <select v-model="stat" v-if="!isCustom">
           <option disable value="">---</option>
           <option>STR</option>
           <option>DEX</option>
@@ -27,8 +28,24 @@
           <option>CHA</option>
         </select>
 
-        <p>Or Custom Mod</p>
-        <input value="CUSTOM" v-model="stat">
+        <span v-if="isCustom">
+          <input value="CUSTOM" v-model="stat">
+        </span>
+
+        <span>
+        <span class="toggle" 
+        v-if="isCustom"
+        @click="isCustom = !isCustom">
+          PICK MOD FROM STATS
+        </span>
+        <span class="toggle" 
+        v-else-if="!isCustom"
+        @click="isCustom = !isCustom">
+          MAKE CUSTOM MOD
+        </span>
+        </span>
+        </div>
+
       </div>
 
       <div key="2" v-else-if="progress === 2">
@@ -49,6 +66,9 @@
         <input value="more" v-model="more">
       </div>
       </transition>
+
+
+
 
         <div id="navigation">
       <transition name="fade" mode="out-in">
@@ -74,8 +94,8 @@
     <h1>When you {{ trigger }}, roll {{ plusminus }} {{stat}}:</h1>
     <ul>
       <ul>
-        <li>On a 10+, {{ fullSuccess }}</li> 
-        <li>On a 7-9, {{ mixedSuccess }}</li>
+        <li>On a {{ fullNumber }}, {{ fullSuccess }}</li> 
+        <li>On a {{ mixedNumber }}, {{ mixedSuccess }}</li>
         
       </ul>
       <li>{{ more }}</li>
@@ -90,20 +110,65 @@ export default {
   data() {
     return {
       progress:1,
-      trigger: 'do something',
+      randomMoves: [
+        { 
+          desc:'find evidence of the missing prince',
+          operator: '+',
+          stat:'WIS',
+          full: `Choose two.`,
+          mixed: 'Choose one.',
+          adden: [`He's unharmed.`, `You're undicovered by his captors.`]
+        },
+        { 
+          desc:'inhale the fumes of a long dead myconid',
+          operator: '+',
+          stat:'CON',
+          full: `You stave off the effects of hallucination.`,
+          mixed: 'You begin to see halucinations, the GM will describe them.',
+          adden: [],
+        },
+        { 
+          desc:'are brought back from the forgotten realm',
+          operator: '-',
+          stat:'past trips to the forgotten realm',
+          full: `Nothing happens, you seem to be normal.`,
+          mixed: 'Choose an effect from the list below. The effect lasts until cured by a reliquary bishop',
+          adden: [`You've forgotten how to see.`, `You've forgotten an advanced move.`, `You've forgotten your fears.`],
+        }
+      ],
+
+      trigger: '',
       plusminus: '+/-',
       stat: 'MODIFIER',
       fullSuccess: '',
       mixedSuccess: '',
       more: '',
+      fullNumber: '10+',
+      mixedNumber: '7-9',
+      isCustom: false,
     }
   },
+  computed: {
+
+  },
   methods: {
-    capture() {
-      window.open('', document.getElementById('theMove').toDataURL());
+    getRandom(max) {
+      return Math.floor(Math.random() * max);
     }
+  },
+  created() {
+    let random = this.getRandom(this.randomMoves.length);
+    let randMove = this.randomMoves[this.getRandom(random)]
+
+    this.trigger = randMove.desc;
+    this.plusminus = randMove.operator;
+    this.stat = randMove.stat;
+    this.fullSuccess = randMove.full;
+    this.mixedSuccess = randMove.mixed;
+    this.more = randMove.adden;
+
   }
-}
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -114,6 +179,11 @@ export default {
 
 ul {
   text-align:left;
+}
+
+.flexCol {
+  display:flex;
+  flex-direction: column;
 }
 
 #inputs p {
@@ -127,14 +197,13 @@ ul {
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
-  width:800px;
 }
 
 #inputs div {
   margin:10px;
 }
 
-#inputs input {
+#inputs textarea {
   margin:0 10px;
   padding:5px;
 }
@@ -160,14 +229,15 @@ section {
   width:800px;
 }
 
-#navigation p {
+#navigation p, .toggle {
+  margin:10px;
   background:rgb(46, 48, 51);
   padding:10px;
   font-weight:600;
   color:white;
   display:inline;
 }
-#navigation p:hover {
+#navigation p:hover, .toggle:hover {
   background:rgb(74, 92, 94);
   cursor:pointer;
 }
