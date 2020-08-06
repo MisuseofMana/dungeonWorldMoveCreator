@@ -6,6 +6,7 @@
 
 <script>
 import MainScreen from './components/MainScreen.vue'
+import './styles/globals.css'
 
 export default {
   name: 'App',

@@ -1,52 +1,10 @@
 <template>
   <div class="fullWrapper">
-    <h1>DUNGEON WORLD CUSTOM MOVE HELPER</h1>
+    <h1>DUNGEON WORLD CUSTOM MOVE MAKER</h1>
     <div id="inputs">
       <transition name="fade" mode="out-in">
-      <div key="1" v-if="progress === 1">
-        <h3>WRITE YOUR MOVE TRIGGER AND CHOOSE YOUR MODIFIERS</h3>
-        <textarea style="resize: none;" value="trigger" v-model="trigger"></textarea>
-
-        <span class="radios">
-        <label for="+">+</label>
-        <input checked type="radio" class="radioButton" value="+" v-model="plusminus">
-        </span>
-
-        <span class="radios">
-        <label for="-">-</label>
-        <input type="radio" class="radioButton" value="-" v-model="plusminus">
-        </span>
-
-        <div class="flexCol">
-        <select v-model="stat" v-if="!isCustom">
-          <option disable value="">---</option>
-          <option>STR</option>
-          <option>DEX</option>
-          <option>CON</option>
-          <option>INT</option>
-          <option>WIS</option>
-          <option>CHA</option>
-        </select>
-
-        <span v-if="isCustom">
-          <input value="CUSTOM" v-model="stat">
-        </span>
-
-        <span>
-        <span class="toggle" 
-        v-if="isCustom"
-        @click="isCustom = !isCustom">
-          PICK MOD FROM STATS
-        </span>
-        <span class="toggle" 
-        v-else-if="!isCustom"
-        @click="isCustom = !isCustom">
-          MAKE CUSTOM MOD
-        </span>
-        </span>
-        </div>
-
-      </div>
+      
+      <move-and-mod key="1" v-if="progress === 1"/>
 
       <div key="2" v-else-if="progress === 2">
         <h3>DEFINE A FULL SUCCESS</h3>
@@ -92,21 +50,25 @@
 
     <section id="theMove">
     <h1>When you {{ trigger }}, roll {{ plusminus }} {{stat}}:</h1>
-    <ul>
       <ul>
         <li>On a {{ fullNumber }}, {{ fullSuccess }}</li> 
         <li>On a {{ mixedNumber }}, {{ mixedSuccess }}</li>
-        
+        <ul>
+          <li v-for="items in more" :key='items'>{{ items }}</li>
+        </ul>
       </ul>
-      <li>{{ more }}</li>
-    </ul>
     </section>
   </div>
 </template>
 
 <script>
+import MoveAndMod from './MoveAndMod'
+
 export default {
   name: 'MainScreen',
+  components: [
+    MoveAndMod,
+  ],
   data() {
     return {
       progress:1,
@@ -142,7 +104,7 @@ export default {
       stat: 'MODIFIER',
       fullSuccess: '',
       mixedSuccess: '',
-      more: '',
+      more: [],
       fullNumber: '10+',
       mixedNumber: '7-9',
       isCustom: false,
@@ -173,74 +135,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.fullWrapper {
-  color:black;
-}
 
-ul {
-  text-align:left;
-}
-
-.flexCol {
-  display:flex;
-  flex-direction: column;
-}
-
-#inputs p {
-  display:inline;
-  margin-left:10px;
-}
-
-#inputs {
-  display:flex;
-  justify-content:center;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-direction: column;
-}
-
-#inputs div {
-  margin:10px;
-}
-
-#inputs textarea {
-  margin:0 10px;
-  padding:5px;
-}
-
-#inputs select {
-  margin:0 0px;
-  padding:5px;
-}
-
-.radios {
-  font-size:20px;
-  font-weight:600;
-  
-}
-
-.radioButton {
-  margin:10px;
-}
-
-section {
-  background:lightgray;
-  padding:10px;
-  width:800px;
-}
-
-#navigation p, .toggle {
-  margin:10px;
-  background:rgb(46, 48, 51);
-  padding:10px;
-  font-weight:600;
-  color:white;
-  display:inline;
-}
-#navigation p:hover, .toggle:hover {
-  background:rgb(74, 92, 94);
-  cursor:pointer;
-}
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
