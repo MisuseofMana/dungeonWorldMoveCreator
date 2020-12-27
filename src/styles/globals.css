@@ -1,9 +1,23 @@
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 .fullWrapper {
     color:black;
   }
   
   ul {
     text-align:left;
+  }
+  
+  .flexRow {
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: center;
   }
   
   .flexCol {
@@ -38,30 +52,21 @@
     padding:5px;
   }
   
-  .radios {
-    font-size:20px;
-    font-weight:600;
-  }
-  
-  .radioButton {
-    margin:10px;
-  }
-  
   section {
     background:lightgray;
     padding:10px;
     width:800px;
   }
-  
-  #navigation p, .toggle {
+
+    .siteButton {
     margin:10px;
     background:rgb(46, 48, 51);
     padding:10px;
     font-weight:600;
     color:white;
-    display:inline;
+    display:inline-block;
   }
-  #navigation p:hover, .toggle:hover {
+  .siteButton:hover {
     background:rgb(74, 92, 94);
     cursor:pointer;
   }
